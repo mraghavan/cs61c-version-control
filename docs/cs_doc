@@ -1,0 +1,39 @@
+cs is a wrapper around git that syncs your local work with work on your server.
+
+Here's how you use it:
+
+The argument [assignment] means if you don't specify assignment, cs will
+try to use the current directory as [assignment]
+
+cs done-server [assignment]
+    configure the server to accept pushed changes. Use this after use-server
+    when your work on the server is done
+
+cs get <assignment>
+    download the master copy of <assignment> to both the server and your
+    local directory.
+
+cs lookup [flags]
+    looks up your grades using the glookup program; passes [flags] directly
+    to glookup.
+
+cs pull [assignment]
+    pull all committed changes from the server.
+
+cs push [assignment]
+    push all committed changes to the server. If [assignment] is not specified,
+    push uses the current directory to determine the assignment
+
+cs submit [assignment]
+    push changes and submit [assignment].
+
+cs update-server [assignment]
+    updates the repository for [assignment] to the $SERVER; use this if the
+    server you used to check out [assignment] is down and you want to be
+    able to push and pull. To do this, you must change $SERVER in .csconfig
+    to a functional server
+
+cs use-server [assignment]
+    configure the server for use (all this does is switches to the git branch
+    br-[assignment]; this is done because local changes are pushed to this
+    branch, not to master)
