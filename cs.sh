@@ -7,6 +7,7 @@ NO_GIT=2
 BAD_ARGS=3
 BAD_BRANCH=4
 INVALID_ASSMT=5
+NO_DIR=6
 NO_CONFIG=100
 
 handle_error()
@@ -24,6 +25,8 @@ handle_error()
                      return 0;;
         $INVALID_ASSMT) echo "$2: no such assignment ${ASSIGNMENT}" >&2;
                         return 0;;
+        $NO_DIR) echo "$2: cannot create directory ${ASSIGNMENT}/${TYPE}" >&2;
+                 return 0;;
         $NO_CONFIG) echo "$2: Incomplete config. Create a file called"\
                          ".csconfig in the same directory as cs.sh and in it,"\
                          "define the environment variables"\
@@ -69,6 +72,13 @@ init()
     if ! [[ ${NUMA} =~ ${re} ]]
     then
        return $INVALID_ASSMT
+    fi
+    if [[ ! -e "${PATH61C}/${TYPE}" ]]
+    then
+        mkdir "${PATH61C}/${TYPE}"
+    elif [[ ! -d "${PATH61C}/${TYPE}" ]]
+    then
+        return $NO_DIR
     fi
 }
 
