@@ -91,7 +91,7 @@ done_using_server()
         return $RET;
     }
     echo "Switching to branch ${BRANCH} on ${SERVER}..."
-    ssh ${SERVER} "cd ${TYPE}/${ASSIGNMENT}; git co master || exit ${BAD_BRANCH}"
+    ssh ${SERVER} "cd ${TYPE}/${ASSIGNMENT}; git checkout master || exit ${BAD_BRANCH}"
     RET=$?
     [[ "$RET" != "0" ]] && handle_error $RET 'done_using_server'
     return $RET;
@@ -113,7 +113,7 @@ get61c()
                   "cd ~/${TYPE}/${ASSIGNMENT}; git init || exit $NO_GIT;"\
                   "git pull ~cs61c/${TYPE}/${NUMDIG} || { cd;"\
                   "rm -rf ~/${TYPE}/${ASSIGNMENT}; exit $NO_GIT; } ;"\
-                  "git br ${BRANCH};"
+                  "git branch ${BRANCH};"
     RET=$?
     [[ "$RET" != "0" ]] && { 
         handle_error $RET 'get';
@@ -129,7 +129,7 @@ get61c()
     git fetch ${ASSIGNMENT}
     git pull ${ASSIGNMENT} ${BRANCH}
     git branch ${BRANCH} ${ASSIGNMENT}/${BRANCH}
-    git co ${BRANCH}
+    git checkout ${BRANCH}
 	return 0
 }
 
@@ -147,7 +147,7 @@ pull61c()
         return $RET;
     }
     echo "Pulling changes for ${ASSIGNMENT}..."
-    git co ${BRANCH} &> /dev/null || {
+    git checkout ${BRANCH} &> /dev/null || {
         echo "pull: could not check out ${BRANCH}" >&2; return $BAD_BRANCH;
     }
     if [[ "$(git symbolic-ref --short -q HEAD)" -ne "${BRANCH}" ]]
@@ -167,7 +167,7 @@ push61c()
         return $RET;
     }
     echo "Pushing changes for ${ASSIGNMENT}..."
-    git co ${BRANCH} &> /dev/null || {
+    git checkout ${BRANCH} &> /dev/null || {
         echo "push: could not check out ${BRANCH}" >&2; return $BAD_BRANCH;
     }
     if [[ "$(git symbolic-ref --short -q HEAD)" -ne "${BRANCH}" ]]
@@ -190,8 +190,8 @@ submit61c()
     git push ${ASSIGNMENT} br-${ASSIGNMENT}
     echo "Submitting ${ASSIGNMENT}..."
     ssh ${SERVER} "cd ${TYPE}/${ASSIGNMENT} || exit ${INVALID_ASSMT};"\
-                  "git co ${BRANCH} || exit ${BAD_BRANCH};"\
-                  "submit ${SUBMISSION}; git co master; glookup -t;"
+                  "git checkout ${BRANCH} || exit ${BAD_BRANCH};"\
+                  "submit ${SUBMISSION}; git checkout master; glookup -t;"
     RET=$?
     [[ "$RET" != "0" ]] && handle_error $RET 'submit';
     return $RET;
@@ -220,7 +220,7 @@ use_server()
     }
     echo "Switching to branch ${BRANCH} on ${SERVER}..."
     ssh ${SERVER} "cd ${TYPE}/${ASSIGNMENT} || exit ${INVALID_ASSMT};"\
-                  "git co ${BRANCH} || exit ${BAD_BRANCH}"
+                  "git checkout ${BRANCH} || exit ${BAD_BRANCH}"
     RET=$?
     [[ "$RET" != "0" ]] && handle_error $RET 'use_server';
     return $RET;
