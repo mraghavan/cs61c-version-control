@@ -1,6 +1,6 @@
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export TYPES='^(hw|proj)$'
+export TYPES='^(hw|proj|lab)$'
 source "${DIR}/.csconfig"
 DIR_EXISTS=1
 NO_GIT=2
@@ -17,7 +17,7 @@ handle_error()
         $DIR_EXISTS) echo "$2: directory already exists" >&2;
                      return 0;;
         $NO_GIT) echo "$2: could not initialize git from"\
-                      "~cs61c/${TYPE}/${NUMDIG}" >&2;
+                      "~cs61c/${TYPE_LOC}/${NUMDIG}" >&2;
                  return 0;;
         $BAD_ARGS) echo "$2: bad argument ${INPUT}" >&2;
                    return 0;;
@@ -63,6 +63,12 @@ init()
         SUBMISSION="${ASSIGNMENT}"
     fi
     [[ ${TYPE} =~ ${TYPES} ]] || return $BAD_ARGS
+    if [[ "${TYPE}" == "lab" ]]
+    then
+        TYPE_LOC="labs/fa13"
+    else
+        TYPE_LOC=${TYPE}
+    fi
     if [[ $FLAG == 0 ]]
     then
         cd "${PATH61C}/${TYPE}/${ASSIGNMENT}" 2> /dev/null || 
@@ -111,7 +117,7 @@ get61c()
     echo "Getting new assignment ${ASSIGNMENT}..."
     ssh ${SERVER} "mkdir ~/${TYPE}/${ASSIGNMENT} || exit $DIR_EXISTS;"\
                   "cd ~/${TYPE}/${ASSIGNMENT}; git init || exit $NO_GIT;"\
-                  "git pull ~cs61c/${TYPE}/${NUMDIG} || { cd;"\
+                  "git pull ~cs61c/${TYPE_LOC}/${NUMDIG} || { cd;"\
                   "rm -rf ~/${TYPE}/${ASSIGNMENT}; exit $NO_GIT; } ;"\
                   "git branch ${BRANCH};"
     RET=$?
