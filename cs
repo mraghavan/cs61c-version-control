@@ -35,8 +35,14 @@ def main(argv):
         print(USAGE, file=sys.stderr)
         return
     cmd = argv[0]
+    ret = 0
     if cmd in bash_func_map:
         ret = bash_call(bash_func_map[cmd], argv[1:])
+    elif cmd in ('help', '--help', '-h'):
+        docs = os.path.dirname(os.path.realpath(__file__)) + '/docs/cs_doc'
+        doc_file = open(docs, 'r')
+        print(doc_file.read())
+        doc_file.close()
     else:
         print('cs: unknown argument ' + cmd, file=sys.stderr)
     if ret != 0:
